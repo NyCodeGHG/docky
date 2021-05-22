@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="docky-kotlin-client-jslegacy-1.0-SNAPSHOT">
+    <output-path>C:\Users\Nico\GolandProjects\docky\kotlin-client\build\libs</output-path>
+    <root id="archive" name="docky-kotlin-client-jslegacy-1.0-SNAPSHOT.jar">
+      <element id="module-output" name="docky-kotlin-client.jsMain" />
+    </root>
+  </artifact>
+</component>

@@ -19,7 +19,7 @@ repositories {
 }
 
 dependencies {
-    implementation("de.nycode", "docky-kotlin-client", "1.0.0")
+    implementation("de.nycode", "docky-kotlin-client", "1.0.1")
     implementation("io.ktor", "ktor-client-okhttp", "1.5.4")
 }
 ```
@@ -35,7 +35,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation("de.nycode", "docky-kotlin-client", "1.0.0")
+                implementation("de.nycode", "docky-kotlin-client", "1.0.1")
                 implementation("io.ktor", "ktor-client-cio", "1.5.4")
             }
         }
@@ -50,7 +50,7 @@ kotlin {
 <dependency>
     <groupId>de.nycode</groupId>
     <artifactId>docky-kotlin-client</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 </dependency>
 ```
 

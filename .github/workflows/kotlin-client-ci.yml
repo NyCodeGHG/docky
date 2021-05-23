@@ -1,0 +1,36 @@
+name: Kotlin Client CI
+
+on:
+  push:
+    paths:
+      - kotlin-client/**
+  pull_request:
+    paths:
+      - kotlin-client/**
+    types:
+      - opened
+      - synchronize
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup JDK
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: 11
+      - name: Cache Gradle packages
+        uses: actions/cache@v2
+        with:
+          key: "gradle-$GITHUB_SHA"
+          path: |
+            ~/kotlin-client/builds
+            ~/kotlin-client/build
+            ~/kotlin-client/.gradle
+          restore-keys: |
+            gradle-
+      - name: Build with Gradle
+        run:
+        working-directory: kotlin-client

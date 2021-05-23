@@ -24,11 +24,11 @@ data class Mount(
     @SerialName("Type")
     val type: MountType,
     @SerialName("Name")
-    val name: String,
+    val name: String?,
     @SerialName("Destination")
     val destination: String,
     @SerialName("Driver")
-    val driver: String,
+    val driver: String?,
     @SerialName("Mode")
     val mode: String,
     @SerialName("RW")

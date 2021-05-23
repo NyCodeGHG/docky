@@ -39,15 +39,16 @@ func GetAllContainers() ([]types.Container, error) {
 	return containers, nil
 }
 
-func GetContainer(name string) (target *types.Container, err error) {
+func GetContainer(id string) (target *types.Container, err error) {
 	containers, err := GetAllContainers()
 	if err != nil {
 		return
 	}
 
 	for _, container := range containers {
-		if container.ID == name {
+		if container.ID == id {
 			target = &container
+			break
 		}
 	}
 	return

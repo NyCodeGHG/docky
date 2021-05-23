@@ -20,7 +20,7 @@ plugins {
 }
 
 group = "de.nycode"
-version = "1.0-SNAPSHOT"
+version = "1.0.0"
 
 repositories {
     mavenCentral()
@@ -108,3 +108,5 @@ kotlin {
 //        val nativeTest by getting
     }
 }
+
+apply(from = "publishing.gradle.kts")

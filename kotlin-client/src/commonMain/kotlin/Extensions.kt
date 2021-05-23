@@ -16,8 +16,9 @@
 
 package de.nycode.docky.client
 
+import io.ktor.client.HttpClient
 import io.ktor.client.request.HttpRequestBuilder
-import io.ktor.client.request.url
-import io.ktor.http.URLBuilder
+import io.ktor.client.request.get
 
-fun HttpRequestBuilder.url(dockyHost: DockyHost, block: URLBuilder.() -> Unit) = url(dockyHost.toString())
+suspend inline fun <reified T> HttpClient.get(dockyHost: DockyHost, request: HttpRequestBuilder.() -> Unit) =
+    get<T>(dockyHost.toString(), request)

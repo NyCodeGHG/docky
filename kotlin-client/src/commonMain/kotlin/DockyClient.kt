@@ -1,21 +1,3 @@
-package de.nycode.docky.client
-
-import de.nycode.docky.client.model.Container
-import io.ktor.client.HttpClient
-import io.ktor.client.HttpClientConfig
-import io.ktor.client.engine.HttpClientEngineConfig
-import io.ktor.client.engine.HttpClientEngineFactory
-import io.ktor.client.features.UserAgent
-import io.ktor.client.features.json.JsonFeature
-import io.ktor.client.features.json.serializer.KotlinxSerializer
-import io.ktor.client.request.get
-import io.ktor.client.request.url
-import kotlinx.serialization.json.Json
-import kotlin.contracts.ExperimentalContracts
-import kotlin.contracts.InvocationKind
-import kotlin.contracts.contract
-import kotlin.js.JsName
-
 /*
  *    Copyright 2021 NyCode
  *
@@ -31,6 +13,22 @@ import kotlin.js.JsName
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
+
+package de.nycode.docky.client
+
+import de.nycode.docky.client.model.Container
+import io.ktor.client.HttpClient
+import io.ktor.client.HttpClientConfig
+import io.ktor.client.engine.HttpClientEngineConfig
+import io.ktor.client.engine.HttpClientEngineFactory
+import io.ktor.client.features.UserAgent
+import io.ktor.client.features.json.JsonFeature
+import io.ktor.client.features.json.serializer.KotlinxSerializer
+import kotlinx.serialization.json.Json
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.InvocationKind
+import kotlin.contracts.contract
+import kotlin.js.JsName
 
 /**
  * Client used for interacting with the Docky Backend via http
@@ -60,7 +58,7 @@ class DockyClient<C : HttpClientEngineConfig> internal constructor(
      * @return all containers
      */
     suspend fun getContainers(): List<Container> {
-        return httpClient.get<List<Container>> {
+        return httpClient.get(dockyHost) {
             url {
                 path("containers")
             }
@@ -72,7 +70,7 @@ class DockyClient<C : HttpClientEngineConfig> internal constructor(
      * @param container the container to redeploy
      */
     suspend fun redeployContainer(container: Container) {
-        return httpClient.get {
+        return httpClient.get(dockyHost) {
             url {
                 path("redeploy/${container.id}")
             }
@@ -84,7 +82,7 @@ class DockyClient<C : HttpClientEngineConfig> internal constructor(
      * @param container the container to restart
      */
     suspend fun restartContainer(container: Container) {
-        return httpClient.get {
+        return httpClient.get(dockyHost) {
             url {
                 path("restart/${container.id}")
             }

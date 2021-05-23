@@ -22,7 +22,7 @@ data class DockyHost(
     val port: Int
 ) {
     override fun toString(): String {
-        return "$host:$port"
+        return "${protocol.name.lowercase()}://$host:$port"
     }
 }
 

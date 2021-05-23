@@ -27,7 +27,7 @@ services:
 ### Kotlin
 
 There is a Kotlin multiplatform library available for accessing docky via http. It's available
-on [Maven Central](https://search.maven.org/artifact/de.nycode/docky-kotlin-client/1.0.0/pom).
+on [Maven Central](https://search.maven.org/artifact/de.nycode/docky-kotlin-client/1.0.2/pom).
 
 **Additionally a ktor engine dependency is needed.**
 
@@ -39,7 +39,7 @@ repositories {
 }
 
 dependencies {
-    implementation("de.nycode", "docky-kotlin-client", "1.0.1")
+    implementation("de.nycode", "docky-kotlin-client", "1.0.2")
     implementation("io.ktor", "ktor-client-okhttp", "1.5.4")
 }
 ```
@@ -55,7 +55,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation("de.nycode", "docky-kotlin-client", "1.0.1")
+                implementation("de.nycode", "docky-kotlin-client", "1.0.2")
                 implementation("io.ktor", "ktor-client-cio", "1.5.4")
             }
         }
@@ -70,7 +70,7 @@ kotlin {
 <dependency>
     <groupId>de.nycode</groupId>
     <artifactId>docky-kotlin-client</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
 </dependency>
 ```
 

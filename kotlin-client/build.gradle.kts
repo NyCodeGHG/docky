@@ -16,6 +16,7 @@
 
 plugins {
     kotlin("multiplatform") version "1.5.0"
+    kotlin("plugin.serialization") version "1.5.0"
 }
 
 group = "de.nycode"
@@ -25,39 +26,85 @@ repositories {
     mavenCentral()
 }
 
+tasks.withType<Test> {
+    useJUnitPlatform {
+        includeEngines.plusAssign("junit-jupiter")
+    }
+}
+
 kotlin {
     jvm {
         compilations.all {
             kotlinOptions.jvmTarget = "11"
         }
+        tasks.withType<Test> {
+            useJUnitPlatform()
+        }
     }
-    js(BOTH) {
+    js(IR) {
         browser()
         nodejs()
     }
-    val hostOs = System.getProperty("os.name")
-    val isMingwX64 = hostOs.startsWith("Windows")
-    val nativeTarget = when {
-        hostOs == "Mac OS X" -> macosX64("native")
-        hostOs == "Linux" -> linuxX64("native")
-        isMingwX64 -> mingwX64("native")
-        else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
-    }
-
+//    val hostOs = System.getProperty("os.name")
+//    val isMingwX64 = hostOs.startsWith("Windows")
+//    val nativeTarget = when {
+//        hostOs == "Mac OS X" -> macosX64("native")
+//        hostOs == "Linux" -> linuxX64("native")
+//        isMingwX64 -> mingwX64("native")
+//        else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
+//    }
     
     sourceSets {
-        val commonMain by getting
+        all {
+            languageSettings.useExperimentalAnnotation("kotlin.RequiresOptIn")
+        }
+
+        val ktorVersion = "1.5.4"
+        val commonMain by getting {
+            dependencies {
+                implementation("io.ktor:ktor-client-core:$ktorVersion")
+                implementation("io.ktor:ktor-client-json:$ktorVersion")
+                implementation("io.ktor:ktor-client-serialization:$ktorVersion")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.1")
+                implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.2.0")
+            }
+        }
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
+                implementation("io.ktor:ktor-client-mock:$ktorVersion")
             }
         }
-        val jvmMain by getting
-        val jvmTest by getting
-        val jsMain by getting
-        val jsTest by getting
-        val nativeMain by getting
-        val nativeTest by getting
+        val jvmMain by getting {
+            dependencies {
+                implementation("io.ktor:ktor-client-cio:$ktorVersion")
+            }
+        }
+        val jvmTest by getting {
+            dependencies {
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.0")
+                implementation(kotlin("test"))
+                implementation(kotlin("test-junit5"))
+                implementation("org.junit.jupiter:junit-jupiter-api:5.7.2")
+                runtimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.2")
+            }
+        }
+        val jsMain by getting {
+            dependencies {
+                implementation("io.ktor:ktor-client-js:$ktorVersion")
+            }
+        }
+        val jsTest by getting {
+            dependencies {
+                implementation(kotlin("test-js"))
+            }
+        }
+//        val nativeMain by getting {
+//            dependencies {
+//                implementation("io.ktor:ktor-client-curl:$ktorVersion")
+//            }
+//        }
+//        val nativeTest by getting
     }
 }

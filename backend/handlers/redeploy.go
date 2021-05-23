@@ -25,6 +25,7 @@ import (
 )
 
 func RedeployHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
 	containerName := strings.TrimPrefix(r.URL.Path, "/redeploy/")
 	if strings.TrimSpace(containerName) == "" {
 		http.Error(w, errors.New("invalid container id").Error(), http.StatusBadRequest)

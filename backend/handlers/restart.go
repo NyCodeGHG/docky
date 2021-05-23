@@ -25,6 +25,7 @@ import (
 )
 
 func RestartHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
 	containerName := strings.TrimPrefix(r.URL.Path, "/restart/")
 	if strings.TrimSpace(containerName) == "" {
 		http.Error(w, errors.New("invalid container id").Error(), http.StatusBadRequest)

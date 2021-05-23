@@ -85,8 +85,8 @@ class DockyClient<C : HttpClientEngineConfig> internal constructor(
      */
     suspend fun restartContainer(container: Container) {
         return httpClient.get {
-            url("") {
-                // path("restart/${container.id}")
+            url {
+                path("restart/${container.id}")
             }
         }
     }

@@ -1,0 +1,9 @@
+version: '3.7'
+
+services:
+  docky:
+    image: nycode/docky
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    ports:
+      - 8080:8080

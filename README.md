@@ -2,6 +2,26 @@
 
 Small http server written in Go for accessing the docker daemon externally.
 
+There is a Docker Image available on [Docker Hub](https://hub.docker.com/r/nycode/docky).
+
+## Docker
+```bash
+docker run -v /var/run/docker.sock:/var/run/docker.sock -p 8080:8080 nycode/docky
+```
+
+## Docker Compose
+```yaml
+version: '3.7'
+
+services:
+  docky:
+    image: nycode/docky
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    ports:
+      - 8080:8080
+```
+
 ## Client Libraries
 
 ### Kotlin

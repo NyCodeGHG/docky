@@ -1,5 +1,11 @@
 # docky
 
+![GitHub](https://img.shields.io/github/license/NyCodeGHG/docky?style=flat-square)
+![GitHub go.mod Go version (subdirectory of monorepo)](https://img.shields.io/github/go-mod/go-version/NyCodeGHG/docky?filename=backend%2Fgo.mod&style=flat-square)
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/NyCodeGHG/docky/Backend%20CI?label=Backend%20CI&style=flat-square)
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/NyCodeGHG/docky/Kotlin%20Client%20CI?label=Kotlin%20Client%20CI&style=flat-square)
+![Maven Central](https://img.shields.io/maven-central/v/de.nycode/docky-kotlin-client?style=flat-square&label=Kotlin%20Client%20Maven%20Central&color=eb9138)
+
 Small http server written in Go for accessing the docker daemon externally.
 
 There is a Docker Image available on [Docker Hub](https://hub.docker.com/r/nycode/docky).
@@ -27,7 +33,7 @@ services:
 ### Kotlin
 
 There is a Kotlin multiplatform library available for accessing docky via http. It's available
-on [Maven Central](https://search.maven.org/artifact/de.nycode/docky-kotlin-client/1.0.2/pom).
+on [Maven Central](https://search.maven.org/artifact/de.nycode/docky-kotlin-client/1.0.5/pom).
 
 **Additionally a ktor engine dependency is needed.**
 
@@ -39,7 +45,7 @@ repositories {
 }
 
 dependencies {
-    implementation("de.nycode", "docky-kotlin-client", "1.0.2")
+    implementation("de.nycode", "docky-kotlin-client", "1.0.5")
     implementation("io.ktor", "ktor-client-okhttp", "1.5.4")
 }
 ```
@@ -55,7 +61,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation("de.nycode", "docky-kotlin-client", "1.0.2")
+                implementation("de.nycode", "docky-kotlin-client", "1.0.5")
                 implementation("io.ktor", "ktor-client-cio", "1.5.4")
             }
         }
@@ -70,7 +76,7 @@ kotlin {
 <dependency>
     <groupId>de.nycode</groupId>
     <artifactId>docky-kotlin-client</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.5</version>
 </dependency>
 ```
 

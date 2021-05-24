@@ -18,6 +18,8 @@ package connection
 
 import (
 	"context"
+	"encoding/base64"
+	"fmt"
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
 	"github.com/spf13/viper"
@@ -102,8 +104,12 @@ func Redeploy(container *types.Container, authentication string) error {
 		}
 	}
 
+	loginToken := base64.URLEncoding.EncodeToString([]byte(fmt.Sprintf("%s:%s", username, password)))
+
 	log.Println("Pulling image...")
-	_, err = cli.ImagePull(ctx, container.Image, types.ImagePullOptions{})
+	_, err = cli.ImagePull(ctx, container.Image, types.ImagePullOptions{
+		RegistryAuth: loginToken,
+	})
 	if err != nil {
 		return err
 	}

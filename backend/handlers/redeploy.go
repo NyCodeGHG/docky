@@ -17,10 +17,12 @@
 package handlers
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/NyCodeGHG/docky/connection"
+	"log"
 	"net/http"
 	"strings"
 )
@@ -48,7 +50,15 @@ func RedeployHandler(w http.ResponseWriter, r *http.Request) {
 
 	var authentication RedeployBody
 
-	json.NewDecoder(r.Body).Decode(&authentication)
+	err = json.NewDecoder(r.Body).Decode(&authentication)
+
+	if err == nil {
+		auth, err := base64.StdEncoding.DecodeString(authentication.Authentication)
+		if err == nil {
+			username := strings.Split(string(auth), ":")
+			log.Printf("Using Username %s and Password *******", username)
+		}
+	}
 
 	w.WriteHeader(200)
 	go func() {

@@ -67,7 +67,7 @@ func Restart(container *types.Container) error {
 	return nil
 }
 
-func Redeploy(container *types.Container) error {
+func Redeploy(container *types.Container, authentication string) error {
 	ctx := context.Background()
 	log.Printf("Redeploying %s\n", container.ID)
 
@@ -87,7 +87,9 @@ func Redeploy(container *types.Container) error {
 	}
 
 	log.Println("Pulling image...")
-	_, err = cli.ImagePull(ctx, container.Image, types.ImagePullOptions{})
+	_, err = cli.ImagePull(ctx, container.Image, types.ImagePullOptions{
+		RegistryAuth: authentication,
+	})
 	if err != nil {
 		return err
 	}

@@ -17,12 +17,17 @@
 package handlers
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/NyCodeGHG/docky/connection"
 	"net/http"
 	"strings"
 )
+
+type RedeployBody struct {
+	Authentication string
+}
 
 func RedeployHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
@@ -40,9 +45,18 @@ func RedeployHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, errors.New("container not found").Error(), http.StatusBadRequest)
 		return
 	}
+
+	var authentication RedeployBody
+
+	err = json.NewDecoder(r.Body).Decode(&authentication)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
 	w.WriteHeader(200)
 	go func() {
-		err = connection.Redeploy(container)
+		err = connection.Redeploy(container, authentication.Authentication)
 		if err != nil {
 			fmt.Println("Received error: " + err.Error())
 		} else {

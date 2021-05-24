@@ -58,6 +58,8 @@ func RedeployHandler(w http.ResponseWriter, r *http.Request) {
 			username := strings.Split(string(auth), ":")
 			log.Printf("Using Username %s and Password *******", username)
 		}
+	} else {
+		fmt.Println(err.Error())
 	}
 
 	w.WriteHeader(200)

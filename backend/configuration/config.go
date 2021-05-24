@@ -41,7 +41,6 @@ func initializeViper() {
 	viper.SetDefault("Host", "0.0.0.0")
 	viper.SetDefault("Username", "")
 	viper.SetDefault("Password", "")
-	viper.SetDefault("Registry", "")
 	viper.AddConfigPath("/etc/docky/")
 	viper.AddConfigPath("$HOME/.docky")
 	viper.AddConfigPath(".")

@@ -89,26 +89,12 @@ func Redeploy(container *types.Container, authentication string) error {
 		return err
 	}
 
-	registry := viper.GetString("Registry")
 	username := viper.GetString("Username")
 	password := viper.GetString("Password")
-	if registry != "" && username != "" && password != "" {
-		log.Println("Logging into registry...")
-		_, err := cli.RegistryLogin(ctx, types.AuthConfig{
-			Username:      username,
-			Password:      password,
-			ServerAddress: registry,
-		})
-		if err != nil {
-			return err
-		}
-	}
-
-	loginToken := base64.URLEncoding.EncodeToString([]byte(fmt.Sprintf("%s:%s", username, password)))
 
 	log.Println("Pulling image...")
 	_, err = cli.ImagePull(ctx, container.Image, types.ImagePullOptions{
-		RegistryAuth: loginToken,
+		RegistryAuth: base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf("{\"username\": \"%s\", \"password\": \"%s\"}", username, password))),
 	})
 	if err != nil {
 		return err

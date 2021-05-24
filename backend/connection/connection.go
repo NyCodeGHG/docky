@@ -93,8 +93,9 @@ func Redeploy(container *types.Container, authentication string) error {
 	if registry != "" && username != "" && password != "" {
 		log.Println("Logging into registry...")
 		_, err := cli.RegistryLogin(ctx, types.AuthConfig{
-			Username: username,
-			Password: password,
+			Username:      username,
+			Password:      password,
+			ServerAddress: registry,
 		})
 		if err != nil {
 			return err

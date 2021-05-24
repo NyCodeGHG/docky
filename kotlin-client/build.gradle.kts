@@ -20,7 +20,7 @@ plugins {
 }
 
 group = "de.nycode"
-version = "1.0.4-SNAPSHOT"
+version = "1.0.4"
 
 repositories {
     mavenCentral()

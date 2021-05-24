@@ -20,6 +20,7 @@ import (
 	"context"
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
+	"github.com/spf13/viper"
 	"log"
 	"time"
 )
@@ -86,10 +87,22 @@ func Redeploy(container *types.Container, authentication string) error {
 		return err
 	}
 
+	registry := viper.GetString("Registry")
+	username := viper.GetString("Username")
+	password := viper.GetString("Password")
+	if registry != "" && username != "" && password != "" {
+		log.Println("Logging into registry...")
+		_, err := cli.RegistryLogin(ctx, types.AuthConfig{
+			Username: username,
+			Password: password,
+		})
+		if err != nil {
+			return err
+		}
+	}
+
 	log.Println("Pulling image...")
-	_, err = cli.ImagePull(ctx, container.Image, types.ImagePullOptions{
-		RegistryAuth: authentication,
-	})
+	_, err = cli.ImagePull(ctx, container.Image, types.ImagePullOptions{})
 	if err != nil {
 		return err
 	}

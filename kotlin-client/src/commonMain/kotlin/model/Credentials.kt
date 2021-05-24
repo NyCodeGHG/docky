@@ -14,15 +14,19 @@
  *    limitations under the License.
  */
 
-package de.nycode.docky.client
+package de.nycode.docky.client.model
 
-import io.ktor.client.HttpClient
-import io.ktor.client.request.HttpRequestBuilder
-import io.ktor.client.request.get
-import io.ktor.client.request.post
+import io.ktor.util.InternalAPI
+import io.ktor.util.encodeBase64
+import kotlinx.serialization.Serializable
 
-suspend inline fun <reified T> HttpClient.get(dockyHost: DockyHost, request: HttpRequestBuilder.() -> Unit) =
-    get<T>(dockyHost.toString(), request)
-
-suspend inline fun <reified T> HttpClient.post(dockyHost: DockyHost, request: HttpRequestBuilder.() -> Unit) =
-    post<T>(dockyHost.toString(), request)
+@Serializable
+data class Credentials(
+    val username: String,
+    val password: String
+) {
+    @OptIn(InternalAPI::class)
+    override fun toString(): String {
+        return "$username:$password".encodeBase64()
+    }
+}

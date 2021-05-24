@@ -48,11 +48,7 @@ func RedeployHandler(w http.ResponseWriter, r *http.Request) {
 
 	var authentication RedeployBody
 
-	err = json.NewDecoder(r.Body).Decode(&authentication)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
+	json.NewDecoder(r.Body).Decode(&authentication)
 
 	w.WriteHeader(200)
 	go func() {

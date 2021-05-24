@@ -15,12 +15,12 @@
  */
 
 plugins {
-    kotlin("multiplatform") version "1.5.0"
-    kotlin("plugin.serialization") version "1.5.0"
+    kotlin("multiplatform") version "1.5.10"
+    kotlin("plugin.serialization") version "1.5.10"
 }
 
 group = "de.nycode"
-version = "1.0.2"
+version = "1.0.3"
 
 repositories {
     mavenCentral()

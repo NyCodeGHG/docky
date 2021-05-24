@@ -22,11 +22,11 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class PortMapping(
     @SerialName("IP")
-    val ip: String,
+    val ip: String? = null,
     @SerialName("PrivatePort")
     val privatePort: Int,
     @SerialName("PublicPort")
-    val publicPort: Int,
+    val publicPort: Int? = null,
     @SerialName("Type")
     val type: PortMappingType,
 )

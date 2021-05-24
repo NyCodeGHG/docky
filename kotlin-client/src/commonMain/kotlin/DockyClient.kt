@@ -17,7 +17,6 @@
 package de.nycode.docky.client
 
 import de.nycode.docky.client.model.Container
-import de.nycode.docky.client.model.Credentials
 import io.ktor.client.HttpClient
 import io.ktor.client.HttpClientConfig
 import io.ktor.client.engine.HttpClientEngineConfig
@@ -25,11 +24,7 @@ import io.ktor.client.engine.HttpClientEngineFactory
 import io.ktor.client.features.UserAgent
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.json.serializer.KotlinxSerializer
-import io.ktor.http.ContentType
-import io.ktor.http.contentType
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.buildJsonObject
-import kotlinx.serialization.json.put
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
@@ -74,14 +69,8 @@ class DockyClient<C : HttpClientEngineConfig> internal constructor(
      * Redeploy a container
      * @param container the container to redeploy
      */
-    suspend fun redeployContainer(container: Container, credentials: Credentials? = null) {
+    suspend fun redeployContainer(container: Container) {
         return httpClient.post(dockyHost) {
-            if (credentials != null) {
-                contentType(ContentType.Application.Json)
-                body = buildJsonObject {
-                    put("Authentication", credentials.toString())
-                }
-            }
             url {
                 path("redeploy/${container.id}")
             }

@@ -17,19 +17,13 @@
 package handlers
 
 import (
-	"encoding/base64"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/NyCodeGHG/docky/connection"
-	"log"
+	"github.com/spf13/viper"
 	"net/http"
 	"strings"
 )
-
-type RedeployBody struct {
-	Authentication string
-}
 
 func RedeployHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
@@ -48,23 +42,9 @@ func RedeployHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var authentication RedeployBody
-
-	err = json.NewDecoder(r.Body).Decode(&authentication)
-
-	if err == nil {
-		auth, err := base64.StdEncoding.DecodeString(authentication.Authentication)
-		if err == nil {
-			username := strings.Split(string(auth), ":")
-			log.Printf("Using Username %s and Password *******", username)
-		}
-	} else {
-		fmt.Println(err.Error())
-	}
-
 	w.WriteHeader(200)
 	go func() {
-		err = connection.Redeploy(container, authentication.Authentication)
+		err = connection.Redeploy(container, viper.GetString("Auth"))
 		if err != nil {
 			fmt.Println("Received error: " + err.Error())
 		} else {

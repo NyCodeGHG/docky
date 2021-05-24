@@ -28,6 +28,8 @@ import io.ktor.client.features.json.serializer.KotlinxSerializer
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
@@ -74,9 +76,11 @@ class DockyClient<C : HttpClientEngineConfig> internal constructor(
      */
     suspend fun redeployContainer(container: Container, credentials: Credentials? = null) {
         return httpClient.post(dockyHost) {
-            contentType(ContentType.Application.Json)
             if (credentials != null) {
-                body = credentials
+                contentType(ContentType.Application.Json)
+                body = buildJsonObject {
+                    put("Authentication", credentials.toString())
+                }
             }
             url {
                 path("redeploy/${container.id}")

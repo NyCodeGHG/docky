@@ -19,6 +19,7 @@ package connection
 import (
 	"context"
 	"encoding/base64"
+	"errors"
 	"fmt"
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
@@ -27,23 +28,32 @@ import (
 	"time"
 )
 
-var cli *client.Client
-
-func init() {
-	cli, _ = client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
+type DockerConnection struct {
+	client *client.Client
 }
 
-func GetAllContainers() ([]types.Container, error) {
+func CreateDockerConnection() (*DockerConnection, error) {
+	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
+	return &DockerConnection{cli}, err
+}
+
+func (connection *DockerConnection) GetVersion() (*types.Version, error) {
 	ctx := context.Background()
-	containers, err := cli.ContainerList(ctx, types.ContainerListOptions{})
+	version, err := connection.client.ServerVersion(ctx)
+	return &version, err
+}
+
+func (connection *DockerConnection) GetAllContainers() ([]types.Container, error) {
+	ctx := context.Background()
+	containers, err := connection.client.ContainerList(ctx, types.ContainerListOptions{})
 	if err != nil {
 		return nil, err
 	}
 	return containers, nil
 }
 
-func GetContainer(id string) (target *types.Container, err error) {
-	containers, err := GetAllContainers()
+func (connection *DockerConnection) GetContainer(id string) (target *types.Container, err error) {
+	containers, err := connection.GetAllContainers()
 	if err != nil {
 		return
 	}
@@ -54,35 +64,40 @@ func GetContainer(id string) (target *types.Container, err error) {
 			break
 		}
 	}
+
+	if target == nil {
+		err = errors.New("container not found")
+	}
+
 	return
 }
 
-func Restart(container *types.Container) error {
+func (connection *DockerConnection) Restart(container *types.Container) error {
 	ctx := context.Background()
-	log.Printf("Redeploying %s\n", container.ID)
+	log.Printf("Restarting  %s\n", container.ID)
 
 	log.Println("Restarting container...")
 	duration := 5 * time.Second
-	err := cli.ContainerRestart(ctx, container.ID, &duration)
+	err := connection.client.ContainerRestart(ctx, container.ID, &duration)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func Redeploy(container *types.Container, authentication string) error {
+func (connection *DockerConnection) Redeploy(container *types.Container) error {
 	ctx := context.Background()
 	log.Printf("Redeploying %s\n", container.ID)
 
 	log.Println("Stopping container...")
 	duration := 5 * time.Second
-	err := cli.ContainerStop(ctx, container.ID, &duration)
+	err := connection.client.ContainerStop(ctx, container.ID, &duration)
 	if err != nil {
 		return err
 	}
 
 	log.Println("Removing image...")
-	_, err = cli.ImageRemove(ctx, container.ImageID, types.ImageRemoveOptions{
+	_, err = connection.client.ImageRemove(ctx, container.ImageID, types.ImageRemoveOptions{
 		Force: true,
 	})
 	if err != nil {
@@ -93,7 +108,7 @@ func Redeploy(container *types.Container, authentication string) error {
 	password := viper.GetString("Password")
 
 	log.Println("Pulling image...")
-	_, err = cli.ImagePull(ctx, container.Image, types.ImagePullOptions{
+	_, err = connection.client.ImagePull(ctx, container.Image, types.ImagePullOptions{
 		RegistryAuth: base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf("{\"username\": \"%s\", \"password\": \"%s\"}", username, password))),
 	})
 	if err != nil {
@@ -101,7 +116,7 @@ func Redeploy(container *types.Container, authentication string) error {
 	}
 
 	log.Println("Starting container...")
-	err = cli.ContainerStart(ctx, container.ID, types.ContainerStartOptions{})
+	err = connection.client.ContainerStart(ctx, container.ID, types.ContainerStartOptions{})
 	if err != nil {
 		return err
 	}

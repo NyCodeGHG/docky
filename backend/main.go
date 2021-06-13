@@ -21,26 +21,28 @@ import (
 	"github.com/NyCodeGHG/docky/connection"
 	"github.com/gofiber/fiber/v2"
 	"github.com/joho/godotenv"
-	"log"
+	"go.uber.org/zap"
 )
 
 func main() {
 	err := godotenv.Load()
+	sugar := zap.NewExample().Sugar()
+	defer sugar.Sync()
 	app := fiber.New()
 
 	con, err := connection.CreateDockerConnection()
 
 	if err != nil {
-		log.Fatal("Unable to establish a connection to the Docker Engine!", err)
+		sugar.Fatal("Unable to establish a connection to the Docker Engine!", err)
 	}
 
 	version, err := con.GetVersion()
 
 	if err != nil {
-		log.Fatal("Unable to fetch Docker Engine Version from Connection", err)
+		sugar.Fatal("Unable to fetch Docker Engine Version from Connection", err)
 	}
 
-	log.Printf("Connected to Docker Socket with Version: %s", version.Version)
+	sugar.Infof("Connected to Docker Socket with Version: %s", version.Version)
 
 	app.Get("/", func(c *fiber.Ctx) error {
 		message := map[string]string{"name": "Docky", "author": "NyCode", "url": "https://github.com/NyCodeGHG/docky", "license": "Apache-2.0"}
@@ -73,8 +75,8 @@ func main() {
 		go func() {
 			err := con.Restart(container)
 			if err != nil {
-				log.Printf("Received error when restarting container %s", containerId)
-				log.Println(err)
+				sugar.Errorf("Received error when restarting container %s", containerId)
+				sugar.Error(err)
 			}
 		}()
 		return c.SendStatus(200)
@@ -90,8 +92,8 @@ func main() {
 		go func() {
 			err := con.Redeploy(container)
 			if err != nil {
-				log.Printf("Received error when redeploying container %s", containerId)
-				log.Println(err)
+				sugar.Errorf("Received error when redeploying container %s", containerId)
+				sugar.Error(err)
 			}
 		}()
 		return c.SendStatus(200)

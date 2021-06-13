@@ -122,3 +122,7 @@ func (connection *DockerConnection) Redeploy(container *types.Container) error {
 	}
 	return nil
 }
+
+func (connection *DockerConnection) Close() error {
+	return connection.client.Close()
+}

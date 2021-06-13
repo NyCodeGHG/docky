@@ -23,8 +23,8 @@ import (
 	"fmt"
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
-	"github.com/spf13/viper"
 	"log"
+	"os"
 	"time"
 )
 
@@ -104,8 +104,8 @@ func (connection *DockerConnection) Redeploy(container *types.Container) error {
 		return err
 	}
 
-	username := viper.GetString("Username")
-	password := viper.GetString("Password")
+	username := os.Getenv("USERNAME")
+	password := os.Getenv("PASSWORD")
 
 	log.Println("Pulling image...")
 	_, err = connection.client.ImagePull(ctx, container.Image, types.ImagePullOptions{

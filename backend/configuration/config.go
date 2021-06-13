@@ -21,14 +21,9 @@ import (
 	"log"
 )
 
-type Config struct {
-	Port int
-	Host string
-}
-
 var viperInitialized = false
 
-func initializeViper() {
+func InitializeViper() {
 	if viperInitialized {
 		return
 	}
@@ -37,8 +32,6 @@ func initializeViper() {
 	viper.SetConfigName("config")
 	viper.SetConfigType("toml")
 
-	viper.SetDefault("Port", 8080)
-	viper.SetDefault("Host", "0.0.0.0")
 	viper.SetDefault("Username", "")
 	viper.SetDefault("Password", "")
 	viper.AddConfigPath("/etc/docky/")
@@ -52,15 +45,4 @@ func initializeViper() {
 	log.Println("Reading environment variables!")
 	viper.AutomaticEnv()
 	viperInitialized = true
-}
-
-// ReadConfig Reads the configuration from viper
-func ReadConfig() (config Config) {
-	initializeViper()
-
-	config = Config{
-		viper.GetInt("Port"),
-		viper.GetString("Host"),
-	}
-	return
 }

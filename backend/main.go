@@ -17,25 +17,88 @@
 package main
 
 import (
-	"fmt"
+	"encoding/json"
 	"github.com/NyCodeGHG/docky/configuration"
-	"github.com/NyCodeGHG/docky/handlers"
+	"github.com/NyCodeGHG/docky/connection"
+	"github.com/gofiber/fiber/v2"
 	"log"
-	"net/http"
 )
 
-func initializeHandlers() {
-	http.HandleFunc("/", handlers.RootHandler)
-	http.HandleFunc("/containers/", handlers.ContainersHandler)
-	http.HandleFunc("/redeploy/", handlers.RedeployHandler)
-	http.HandleFunc("/restart/", handlers.RestartHandler)
-}
-
 func main() {
-	config := configuration.ReadConfig()
-	initializeHandlers()
+	configuration.InitializeViper()
+	app := fiber.New()
 
-	bindAddress := fmt.Sprintf("%s:%d", config.Host, config.Port)
-	log.Printf("Listening on %s\n", bindAddress)
-	log.Fatal(http.ListenAndServe(bindAddress, nil))
+	con, err := connection.CreateDockerConnection()
+
+	if err != nil {
+		log.Fatal("Unable to establish a connection to the Docker Engine!", err)
+	}
+
+	version, err := con.GetVersion()
+
+	if err != nil {
+		log.Fatal("Unable to fetch Docker Engine Version from Connection", err)
+	}
+
+	log.Printf("Connected to Docker Socket with Version: %s", version.Version)
+
+	app.Get("/", func(c *fiber.Ctx) error {
+		message := map[string]string{"name": "Docky", "author": "NyCode", "url": "https://github.com/NyCodeGHG/docky", "license": "Apache-2.0"}
+		messageJson, _ := json.Marshal(message)
+		return c.Send(messageJson)
+	})
+
+	app.Get("/containers/", func(c *fiber.Ctx) error {
+		containers, err := con.GetAllContainers()
+		if err != nil {
+			return err
+		}
+
+		containerJson, err := json.Marshal(containers)
+
+		if err != nil {
+			return err
+		}
+
+		return c.Send(containerJson)
+	})
+
+	app.Post("/restart/:container", func(c *fiber.Ctx) error {
+		containerId := c.Params("container")
+		container, err := con.GetContainer(containerId)
+		if err != nil {
+			return err
+		}
+
+		go func() {
+			err := con.Restart(container)
+			if err != nil {
+				log.Printf("Received error when restarting container %s", containerId)
+				log.Println(err)
+			}
+		}()
+		return c.SendStatus(200)
+	})
+
+	app.Post("/redeploy/:container", func(c *fiber.Ctx) error {
+		containerId := c.Params("container")
+		container, err := con.GetContainer(containerId)
+		if err != nil {
+			return err
+		}
+
+		go func() {
+			err := con.Redeploy(container)
+			if err != nil {
+				log.Printf("Received error when redeploying container %s", containerId)
+				log.Println(err)
+			}
+		}()
+		return c.SendStatus(200)
+	})
+
+	err = app.Listen(":3000")
+	if err != nil {
+		panic(err)
+	}
 }

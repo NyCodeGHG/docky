@@ -82,7 +82,7 @@ class DockyClient<C : HttpClientEngineConfig> internal constructor(
      * @param container the container to restart
      */
     suspend fun restartContainer(container: Container) {
-        return httpClient.get(dockyHost) {
+        return httpClient.post(dockyHost) {
             url {
                 path("restart/${container.id}")
             }

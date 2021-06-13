@@ -16,12 +16,16 @@
 
 apply(plugin = "org.gradle.maven-publish")
 apply(plugin = "org.gradle.signing")
+apply(plugin = "org.jetbrains.dokka")
 
 val sonatypeUsername = project.findProperty("sonatypeUsername").toString()
 val sonatypePassword = project.findProperty("sonatypePassword").toString()
 
 val javadocJar = tasks.register<Jar>("javadocJar") {
     archiveClassifier.set("javadoc")
+    val dokkaHtml = tasks.getByName("dokkaHtml")
+    dependsOn(dokkaHtml)
+    from(dokkaHtml)
 }
 
 val configurePublishing: PublishingExtension.() -> Unit = {

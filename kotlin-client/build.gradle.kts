@@ -17,10 +17,11 @@
 plugins {
     kotlin("multiplatform") version "1.5.10"
     kotlin("plugin.serialization") version "1.5.10"
+    id("org.jetbrains.dokka") version "1.4.32"
 }
 
 group = "de.nycode"
-version = "1.0.5"
+version = "1.0.6"
 
 repositories {
     mavenCentral()
@@ -59,14 +60,14 @@ kotlin {
             languageSettings.useExperimentalAnnotation("kotlin.RequiresOptIn")
         }
 
-        val ktorVersion = "1.5.4"
+        val ktorVersion = "1.6.0"
         val commonMain by getting {
             dependencies {
                 implementation("io.ktor:ktor-client-core:$ktorVersion")
                 implementation("io.ktor:ktor-client-json:$ktorVersion")
                 implementation("io.ktor:ktor-client-serialization:$ktorVersion")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.1")
-                implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.2.0")
+                implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.2.1")
             }
         }
         val commonTest by getting {

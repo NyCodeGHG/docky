@@ -12,7 +12,7 @@ There is a Docker Image available on [Docker Hub](https://hub.docker.com/r/nycod
 
 ## Docker
 ```bash
-docker run -v /var/run/docker.sock:/var/run/docker.sock -p 8080:8080 nycode/docky
+docker run -v /var/run/docker.sock:/var/run/docker.sock -p 8080:3000 nycode/docky
 ```
 
 ## Docker Compose
@@ -24,8 +24,11 @@ services:
     image: nycode/docky
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      USERNAME: user # Example Username for Docker Registry Authentication
+      PASSWORD: pass # Example Password for Docker Registry Authentication
     ports:
-      - 8080:8080
+      - 8080:3000
 ```
 
 ## Client Libraries
@@ -46,7 +49,7 @@ repositories {
 
 dependencies {
     implementation("de.nycode", "docky-kotlin-client", "1.0.5")
-    implementation("io.ktor", "ktor-client-okhttp", "1.5.4")
+    implementation("io.ktor", "ktor-client-okhttp", "1.6.0")
 }
 ```
 
@@ -62,7 +65,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation("de.nycode", "docky-kotlin-client", "1.0.5")
-                implementation("io.ktor", "ktor-client-cio", "1.5.4")
+                implementation("io.ktor", "ktor-client-cio", "1.6.0")
             }
         }
     }

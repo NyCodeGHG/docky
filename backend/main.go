@@ -97,7 +97,8 @@ func main() {
 		return c.SendStatus(200)
 	})
 
-	err = app.Listen(":3000")
+	_ = app.Listen(":3000")
+	err = con.Close()
 	if err != nil {
 		panic(err)
 	}

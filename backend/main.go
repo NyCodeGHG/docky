@@ -18,12 +18,14 @@ package main
 
 import (
 	"encoding/json"
+	"github.com/NyCodeGHG/docky/configuration"
 	"github.com/NyCodeGHG/docky/connection"
 	"github.com/gofiber/fiber/v2"
 	"log"
 )
 
 func main() {
+	configuration.InitializeViper()
 	app := fiber.New()
 
 	con, err := connection.CreateDockerConnection()

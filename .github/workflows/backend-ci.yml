@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - backend/**
+      - .github/**
   pull_request:
     paths:
       - backend/**
@@ -23,7 +24,7 @@ jobs:
       - name: Setup Golang
         uses: actions/setup-go@v2
         with:
-          go-version: '^1.16'
+          go-version: "^1.16"
       - uses: actions/cache@v2
         with:
           path: ~/go/pkg/mod

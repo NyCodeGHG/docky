@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - backend/**
+      - .github/**
     branches:
       - main
   workflow_dispatch:
@@ -19,10 +20,7 @@ jobs:
           DOCKER_USERNAME: nycode
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         run: echo $DOCKER_PASSWORD | docker login --username $DOCKER_USERNAME --password-stdin
-      - name: Build & Tag
-        run: docker build -t nycode/docky:latest -t nycode/docky:"$GITHUB_SHA" .
+      - name: Build and Push
+        run: ./build.sh
+        shell: bash
         working-directory: backend
-      - name: Push
-        run: docker push nycode/docky:latest
-      - name: Push specific tag
-        run: docker push nycode/docky:"$GITHUB_SHA"

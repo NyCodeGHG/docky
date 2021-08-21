@@ -11,4 +11,5 @@ require (
 	github.com/joho/godotenv v1.3.0
 	github.com/moby/term v0.0.0-20201216013528-df9cb8a40635 // indirect
 	github.com/morikuni/aec v1.0.0 // indirect
+	go.uber.org/zap v1.10.0
 )

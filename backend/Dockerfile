@@ -10,7 +10,7 @@ ENV GOARCH=$ARCH
 
 RUN go build .
 
-FROM scratch
+FROM alpine
 
 WORKDIR /app
 COPY --from=builder /build/docky /docky
